@@ -1,0 +1,106 @@
+Targets of this article:
+1. understanding the basic concept of machine learning
+2. understanding the basic usage of TensorFlow
+3. to learn how to use TensorFlow to Machine learning with 2 simple examples, including recognizing handwritten digits.
+
+Prerequisite:
+1. basic understanding of Python
+2. Python program development environment (I use Python2.7 and MacOS 10.10.5)
+3. get necessary packages installed. They are: TensorFlow, Numpy, matplotlib, Scipy, PIL( or pillow in Mac)
+4. basic knowledge of machine learning and TensorFlow. 
+
+Example 1.  Start with a simple equation y = f(x)
+Using TensorFlow to recognize handwritten digits is to solve this problem:
+
+Given a handwritten digit image: x, TensorFlow needs to figure out the value of y, 
+where y = f(x).
+For example, when the following image is input, the output is 4.
+
+In other words, TensorFlow comes out with f(x) = 4 when x = this image.
+This will be done in example 2.
+
+Before we solve this complex problem, let’s first solve a simpler equation:
+
+Given y = f(x), when x = 0, 1, 2, 3, 4 or 5, y = 0, 4, 8, 12, 16 or 20
+Please tell the values of y, when x = 6, 7, 8...
+
+In fact, it’s a very simple equation. We can easily calculate them by hand.
+However, let’s train our first “baby” machine to solve this simple problem.
+
+Step 1. Find examples for TensorFlow to learn.
+# Split the data into training/testing sets
+X_train = [[0,1,2],[3,4,5]]
+y_train = [[0,4,8],[12,16,20]]
+
+Step 2. Use the sample(s) to train our “baby” machine.
+# Create linear regression object
+regr = linear_model.LinearRegression()
+# Train the model using the training sets
+regr.fit(X_train, y_train)
+
+Step 3. Let the “baby” machine to “predict” the output:
+
+X_test = [[6,7,8]]
+print regr.predict(X_test) 
+
+The output is predicted by our “baby” machine:
+
+Success!
+It’s a simple example. However, it discovers the key steps of using TensorFlow for one type of machine learnings:
+Step 1. Find examples.
+Step 2. Use the examples to train our machine.
+Step 3. Use the machine to do prediction.
+
+
+
+Example 2. Recognize a handwritten digital
+In this example, we will use the 3 steps.
+Step 1. Find examples.
+Step 2. Use the examples to train our machine.
+Step 3. Use the machine to do prediction.
+
+I have used the examples of scikit-learn, where there are handwritten digital images.
+from sklearn.datasets import load_digits
+digits = load_digits()
+Actually the digital image is digits['images'][100].It’s the test data.
+
+Here’s the whole code in Python:
+def recogImg(classifier,img):
+ import numpy as np
+ ss_test = np.reshape(img,(-1,64))
+ y_pred = classifier.predict(ss_test)
+ print("The  handwritten digit is:")
+ print(y_pred[0])
+
+
+if __name__ == "__main__":
+ #Step 1. find the examples
+ from sklearn.datasets import load_digits
+ digits = load_digits()
+
+ #Step 2. use the first 70 examples to train our machine
+ from sklearn.cross_validation import train_test_split
+ X = digits.data[0:69]
+ y = digits.target[0:69]
+ X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+ from tensorflow.contrib import skflow
+ n_classes = len(set(y_train))
+ classifier = skflow.TensorFlowLinearClassifier(n_classes=n_classes)
+ classifier.fit(X_train, y_train)
+
+ #Step 3. Use the machine to predict the NO.101 handwritten digit:
+ img = digits['images'][100]
+ recogImg(classifier,img)
+
+ from matplotlib import pyplot as plt
+ digits = load_digits()
+ fig = plt.figure(figsize=(3, 3))
+ plt.imshow(img, cmap="gray", interpolation='none')
+ plt.show()
+
+Here’s the result:
+The new handwritten digit is:
+4.
+
+
